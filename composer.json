@@ -1,0 +1,17 @@
+{
+    "name": "sirprize/scrubble",
+    "type": "library",
+    "description": "Powering blog-aware note-taking apps",
+    "keywords": ["routing", "dependency-injection", "event-dispatching", "templating", "symfony", "pimple"],
+    "homepage": "http://scribbled.io",
+    "license": "MIT",
+    "authors": [
+        { "name": "Christian Hoegl", "email": "chrigu@sirprize.me" }
+    ],
+    "autoload": {
+        "psr-0": { "Sirprize\\Scrubble": "lib/" }
+    },
+    "require": {
+        "php": ">=5.3.2"
+    }
+}
