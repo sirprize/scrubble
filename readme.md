@@ -1,6 +1,6 @@
 # Scrubble
 
-Powering blog-aware note-taking apps implementing the [Scribble](https://github.com/sirprize/scribble) text file browsing and converter service.
+Powering blog-aware note apps implementing the [Scribble](https://github.com/sirprize/scribble) text file browsing and converter service.
 
 ## Features
 
