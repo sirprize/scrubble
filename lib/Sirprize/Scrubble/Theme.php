@@ -25,7 +25,7 @@ class Theme extends Config
         parent::__construct($config);
         $this->debug = $this->getItem('debug', null, true);
         $this->templateDir = realpath($this->getItem('templateDir', null, true));
-        $this->mediaPath = $this->getItem('mediaPath', null, true);
+        $this->mediaPath = preg_replace('/\/\//', '/', $this->getItem('mediaPath', null, true));
     }
 
     public function debug()
