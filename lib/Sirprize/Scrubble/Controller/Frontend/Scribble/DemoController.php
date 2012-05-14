@@ -30,7 +30,7 @@ class DemoController extends AbstractController
 
         $loader = new FilesystemLoader(
             array(
-                $this->getServices()->get('env')->getTemplateDir().'/%name%',
+                $this->getServices()->get('theme')->getTemplateDir().'/%name%',
                 $scribble->getDir().'/%name%'
             )
         );

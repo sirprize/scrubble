@@ -15,7 +15,7 @@ use Sirprize\Scribble\ScribbleDirWithSubdirs;
 use Sirprize\Scrubble\Config;
 use Sirprize\Scrubble\DependencyInjection\DiContainer;
 use Sirprize\Scrubble\Service\Scribble\ScribbleRepository;
-use Sirprize\Scrubble\Env;
+use Sirprize\Scrubble\Theme;
 use Sirprize\Scrubble\Defaults\Routes;
 use Sirprize\Scrubble\HttpKernel\HttpKernel;
 use Sirprize\Scrubble\HttpKernel\EventSubscriber\ControllerServicesInjector;
@@ -113,12 +113,8 @@ class Bootstrap
             return $repository;
         };
 
-        $services['env'] = $services->share(function($c) {
-            return new Env($c['config']['env']);
-        });
-
-        $services['defaults'] = $services->share(function($c) {
-            return new Config($c['config']['defaults']);
+        $services['theme'] = $services->share(function($c) {
+            return new Theme($c['config']['theme']);
         });
 
         $services['google'] = $services->share(function($c) {
@@ -172,7 +168,7 @@ class Bootstrap
         });
 
         $services['view'] = $services->share(function($c) {
-            $loader = new FilesystemLoader($c['env']->getTemplateDir().'/%name%');
+            $loader = new FilesystemLoader($c['theme']->getTemplateDir().'/%name%');
             return new PhpEngine(new TemplateNameParser(), $loader);
         });
 
