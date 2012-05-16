@@ -2,8 +2,6 @@
 
 namespace Sirprize\Scrubble\Controller\Frontend;
 
-use Sirprize\Scribble\Filter\Criteria;
-use Sirprize\Paginate\Paginator;
 use Sirprize\Scrubble\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +19,7 @@ class TagController extends AbstractController
         );
 
         $repository = $this->getServices()->get('scribble.repository');
-        $scribbles = $repository->getList(new Criteria(), new Paginator(), $params);
+        $scribbles = $repository->getList(null, null, $params);
         $view = $this->getServices()->get('view');
 
         $vars = array(

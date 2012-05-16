@@ -38,8 +38,10 @@ class ScribbleRepository
         return $this;
     }
 
-    public function getList(Criteria $criteria, Paginator $paginator, array $params = array())
+    public function getList(Criteria $criteria = null, Paginator $paginator = null, array $params = array())
     {
+        $criteria = ($criteria) ? $criteria : new Criteria();
+        $paginator = ($paginator) ? $paginator : new Paginator();
         $page = (array_key_exists('page', $params)) ? (int) $params['page'] : 1;
         $sorting = (array_key_exists('sorting', $params)) ? $params['sorting'] : 'created';
         $descending = (array_key_exists('descending', $params)) ? (bool) $params['descending'] : true;
