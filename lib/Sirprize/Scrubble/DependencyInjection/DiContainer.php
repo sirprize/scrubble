@@ -29,10 +29,10 @@ class DiContainer extends \Pimple
         catch(\Exception $e) {
             if(extension_loaded('xdebug'))
             {
-                throw new DiException(sprintf('"Requesting undefined service "%s" in file "%s" on line %d.', $id, xdebug_call_file(), xdebug_call_line()));
+                throw new DiException(sprintf('Service error "%s" in file "%s" on line %d >> "%s".', $id, xdebug_call_file(), xdebug_call_line(), $e->getMessage()));
             }
             else {
-                throw new DiException(sprintf('Service identifier "%s" is not defined.', $id));
+                throw new DiException(sprintf('Service error "%s" >> "%s"', $id, $e->getMessage()));
             }
         }
     }
