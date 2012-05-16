@@ -4,7 +4,7 @@ Powering noteblog apps implementing the [Scribble](https://github.com/sirprize/s
 
 ## Features
 
-+ Controllers for scribble lists, scribble detail, tag browsing, atom feed, JSON API and errors
++ Controllers for scribble lists, scribble detail, tag browsing, single pages, atom feed, JSON API and errors
 + Add functionality by adding services to the [DI container](https://github.com/fabpot/Pimple)
 + Register custom event listeners to hook into every aspect of the [application lifecycle](https://github.com/symfony/EventDispatcher)
 + [Templating](https://github.com/symfony/Templating) with inheritance and partials
@@ -19,6 +19,7 @@ Get [Scribbled](https://github.com/sirprize/scribbled) for a full implementation
 The following routes are available by default:
 
 + `/`
++ `/{page}/`
 + `/scribble/{slug}/`
 + `/scribble/{slug}/demo/`
 + `/tag/{tag1}/{tag2}/{tag3}/...`
@@ -48,6 +49,14 @@ Scrubble expects the following configuration
             'mode' => <val>,
             'itemsPerPage' => <val>
         ),
+        'page.directory' => array(
+            // config for Sirprize\Scribble\ScribbleDirWithFiles
+            // see https://github.com/sirprize/scribble
+        ),
+        'page.repository' => array(
+            'mode' => <val>,
+            'itemsPerPage' => <val>
+        ),
         'requires => array(
             dirname(__DIR__).'/vendor/autoload.php',
             dirname(__DIR__).'/vendor-unmanaged/michelf/php-markdown/markdown.php',
@@ -69,6 +78,7 @@ Scrubble will look for the following templates by default:
 
 + `{template-dir}/frontend/scribble/index.phtml`
 + `{template-dir}/frontend/scribble/detail.phtml`
++ `{template-dir}/frontend/page/index.phtml`
 + `{template-dir}/frontend/tag/index.phtml`
 + `{template-dir}/error.phtml`
 
@@ -81,9 +91,9 @@ Grab the default route collection from the service container and add a route to 
     $services = Bootstrap::getServices($config);
     $routes = $services->get('routes');
 
-    $routes->add('about', new Route(
-        '/about/',
-        array('_controller' => 'MyScribbleApp\Controller\Frontend\AboutController::indexAction', 'template' => 'about.phtml')
+    $routes->add('extrawurst', new Route(
+        '/extra/wurst/',
+        array('_controller' => 'MyScribbleApp\Controller\Frontend\ExtrawurstController::indexAction', 'template' => 'extrawurst.phtml')
     ));
 
 Removing any of the default routes is just as easy:
@@ -96,7 +106,7 @@ Removing any of the default routes is just as easy:
 
 ## Adding Controllers
 
-Here's an example of a new controller for your app. It must implement `Sirprize\Scrubble\Controller\ControllerInterface` but by extending `Sirprize\Scrubble\Controller\AbstractController`, this implementation is already taken care of. We're merely left with the job of writing one single action method. It is the responsibility of this method to create, populate and return a response object. Note the `$template` variable in the method signature: it holds the template name from our route config. Remove this variable if your route does not pass in a template name. Also note how the service container is piped through to the template. This allows to request services directly from within templates which is convenient if no preliminary work by the controller is required (eg a config object etc)
+Here's an example of a new controller for your app. It must implement `Sirprize\Scrubble\Controller\ControllerInterface` but by extending `Sirprize\Scrubble\Controller\AbstractController`, this implementation is already taken care of. We're merely left with the job of writing one single action method. It is the responsibility of this method to create, populate and return a response object. Note the `$template` variable in the method signature: it holds the template name from our route config. Remove this variable if your route does not pass in a template name. Also note how the service container is piped through to the template. This allows to request services directly from within templates which can be convenient if no preliminary work by the controller is required (eg a config object etc)
 
     namespace MyScribbleApp\Controller\Frontend;
 
@@ -104,7 +114,7 @@ Here's an example of a new controller for your app. It must implement `Sirprize\
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
 
-    class AboutController extends AbstractController
+    class ExtrawurstController extends AbstractController
     {
         public function indexAction(Request $request, $template)
         {
