@@ -11,6 +11,7 @@ namespace Sirprize\Scrubble;
 use Doctrine\Common\ClassLoader;
 use Sirprize\Scrubble\ScrubbleException;
 use Sirprize\Scrubble\Controller\ErrorController;
+use Sirprize\Scribble\ScribbleDirWithFiles;
 use Sirprize\Scribble\ScribbleDirWithSubdirs;
 use Sirprize\Scrubble\Config;
 use Sirprize\Scrubble\DependencyInjection\DiContainer;
@@ -102,17 +103,30 @@ class Bootstrap
     {
         $services = new DiContainer();
         $services['config'] = $config;
-
+        
+        // scribbles
         $services['scribble.directory'] = $services->share(function($c) {
             return new ScribbleDirWithSubdirs($c['config']['scribble.directory']);
         });
 
-        $services['scribble.repository'] = function($c) {
+        $services['scribble.repository'] = $services->share(function($c) {
             $repository = new ScribbleRepository($c['config']['scribble.repository']);
             $repository->setDirectory($c['scribble.directory']);
             return $repository;
-        };
+        });
+        
+        // pages
+        $services['page.directory'] = $services->share(function($c) {
+            return new ScribbleDirWithFiles($c['config']['page.directory']);
+        });
 
+        $services['page.repository'] = $services->share(function($c) {
+            $repository = new ScribbleRepository($c['config']['page.repository']);
+            $repository->setDirectory($c['page.directory']);
+            return $repository;
+        });
+        
+        // misc
         $services['theme'] = $services->share(function($c) {
             return new Theme($c['config']['theme']);
         });
@@ -220,6 +234,12 @@ class Bootstrap
         $routes->add('facebookChannelIndex', new Route(
             '/facebook/channel/',
             array('_controller' => 'Sirprize\Scrubble\Controller\Facebook\ChannelController::indexAction')
+        ));
+        
+        $routes->add('frontendPageIndex', new Route(
+            '/{slug}/',
+            array('_controller' => 'Sirprize\Scrubble\Controller\Frontend\PageController::indexAction', 'template' => 'frontend/page/index.phtml'),
+            array('slug' => '[\w-]+')
         ));
 
         return $routes;

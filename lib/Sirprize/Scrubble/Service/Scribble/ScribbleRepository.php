@@ -8,7 +8,7 @@
 
 namespace Sirprize\Scrubble\Service\Scribble;
 
-use Sirprize\Scribble\ScribbleDirWithSubdirs;
+use Sirprize\Scribble\ScribbleDirInterface;
 use Sirprize\Scribble\ScribbleCollection;
 use Sirprize\Scribble\Filter\Filter;
 use Sirprize\Scribble\Filter\Criteria;
@@ -32,7 +32,7 @@ class ScribbleRepository
         $this->mode = (array_key_exists('mode', $config)) ? $config['mode'] : Criteria::MODE_PUBLISHED;
     }
 
-    public function setDirectory(ScribbleDirWithSubdirs $directory)
+    public function setDirectory(ScribbleDirInterface $directory)
     {
         $this->directory = $directory;
         return $this;
