@@ -103,9 +103,9 @@ class Bootstrap
         $services = new DiContainer();
         $services['config'] = $config;
 
-        $services['scribble.directory'] = function($c) {
+        $services['scribble.directory'] = $services->share(function($c) {
             return new ScribbleDirWithSubdirs($c['config']['scribble.directory']);
-        };
+        });
 
         $services['scribble.repository'] = function($c) {
             $repository = new ScribbleRepository($c['config']['scribble.repository']);
