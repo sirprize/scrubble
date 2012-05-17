@@ -1,7 +1,7 @@
 {
     "name": "sirprize/scrubble",
     "type": "library",
-    "description": "Powering noteblog apps",
+    "description": "Powering the Scribbled noteblog app",
     "keywords": ["routing", "dependency-injection", "event-dispatching", "templating", "symfony", "pimple"],
     "homepage": "http://scribbled.io",
     "license": "MIT",
