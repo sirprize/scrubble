@@ -3,7 +3,7 @@
     "type": "library",
     "description": "Powering the Scribbled noteblog app",
     "keywords": ["routing", "dependency-injection", "event-dispatching", "templating", "symfony", "pimple"],
-    "homepage": "http://scribbled.io",
+    "homepage": "http://scribbled.io/about-scrubble/",
     "license": "MIT",
     "authors": [
         { "name": "Christian Hoegl", "email": "chrigu@sirprize.me" }
