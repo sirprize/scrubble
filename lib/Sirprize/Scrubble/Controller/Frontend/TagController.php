@@ -25,7 +25,7 @@ class TagController extends AbstractController
         );
 
         $repository = $this->getServices()->get('scribble.repository');
-        $scribbles = $repository->getList(null, null, $params);
+        $scribbles = $repository->getList(null, $params);
         $view = $this->getServices()->get('view');
 
         $vars = array(
