@@ -12,7 +12,7 @@ use Sirprize\Scribble\ScribbleDirInterface;
 use Sirprize\Scribble\ScribbleCollection;
 use Sirprize\Scribble\Filter\Filter;
 use Sirprize\Scribble\Filter\Criteria;
-use Sirprize\Paginate\Paginator;
+use Sirprize\Paginate\CurrentPagePaginator;
 
 /**
  * ScribbleRepository fetches scribbles.
@@ -38,17 +38,19 @@ class ScribbleRepository
         return $this;
     }
 
-    public function getList(Criteria $criteria = null, Paginator $paginator = null, array $params = array())
+    public function getList(Criteria $criteria = null, array $params = array())
     {
-        $criteria = ($criteria) ? $criteria : new Criteria();
-        $paginator = ($paginator) ? $paginator : new Paginator();
         $page = (array_key_exists('page', $params)) ? (int) $params['page'] : 1;
+        $itemsPerPage = (array_key_exists('itemsPerPage', $params)) ? (int) $params['itemsPerPage'] : $this->itemsPerPage;
+        
         $sorting = (array_key_exists('sorting', $params)) ? $params['sorting'] : 'created';
         $descending = (array_key_exists('descending', $params)) ? (bool) $params['descending'] : true;
-
-        // overwrite config defaults?
-        $itemsPerPage = (array_key_exists('itemsPerPage', $params)) ? (int) $params['itemsPerPage'] : $this->itemsPerPage;
+        
+        $criteria = ($criteria) ? $criteria : new Criteria();
         $mode = ($criteria->getMode()) ? $criteria->getMode() : $this->mode;
+        
+        // paginator
+        $paginator = new CurrentPagePaginator($page, $itemsPerPage);
 
         // criteria
         $criteria->setMode($mode);
@@ -73,7 +75,7 @@ class ScribbleRepository
         // filter and paginate
         $filter = new Filter();
         $scribbles = $filter->apply($allScribbles, $criteria)->getScribbles();
-        $paginator->calculateFromCurrentPage($scribbles->count(), $page, $itemsPerPage);
+        $paginator->start($scribbles->count());
         $scribbles = new ScribbleCollection($scribbles->slice($paginator->getOffset(), $itemsPerPage));
         return new ScribbleListBag($scribbles, $filter, $criteria, $paginator);
     }

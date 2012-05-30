@@ -9,7 +9,6 @@
 namespace Sirprize\Scrubble\Controller\Frontend\Scribble;
 
 use Sirprize\Scribble\Filter\Criteria;
-use Sirprize\Paginate\Paginator;
 use Sirprize\Scrubble\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

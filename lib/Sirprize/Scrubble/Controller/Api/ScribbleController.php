@@ -9,7 +9,6 @@
 namespace Sirprize\Scrubble\Controller\Api;
 
 use Sirprize\Scribble\Filter\Criteria;
-use Sirprize\Paginate\Paginator;
 use Sirprize\Scrubble\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,12 +20,7 @@ class ScribbleController extends AbstractController
     {
         $criteria = new Criteria();
         $criteria->setFind($request->query->get('find'));
-
-        $paginator = new Paginator();
-        $paginator->setPageParam('page');
-        $paginator->setBaseUrl($this->getServices()->get('urler')->generate('frontendScribbleIndex', array(), true));
-        $paginator->addParam('find', $criteria->getFind());
-
+        
         $params = array(
             'page' => $request->query->get('page'),
             'sorting' => 'created',
@@ -34,7 +28,10 @@ class ScribbleController extends AbstractController
         );
 
         $repository = $this->getServices()->get('scribble.repository');
-        $scribbles = $repository->getList($criteria, $paginator, $params);
+        $scribbles = $repository->getList($criteria, $params);
+        $scribbles->getPaginator()->setPageParam('page');
+        $scribbles->getPaginator()->setBaseUrl($this->getServices()->get('urler')->generate('frontendScribbleIndex', array(), true));
+        $scribbles->getPaginator()->addParam('find', $criteria->getFind());
 
         $data = array();
 

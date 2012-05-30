@@ -9,7 +9,7 @@
 namespace Sirprize\Scrubble\Controller\Frontend;
 
 use Sirprize\Scribble\Filter\Criteria;
-use Sirprize\Paginate\Paginator;
+use Sirprize\Paginate\CurrentPagePaginator;
 use Sirprize\Scrubble\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,11 +23,6 @@ class ScribbleController extends AbstractController
         $criteria = new Criteria();
         $criteria->setFind($request->query->get('find'));
 
-        $paginator = new Paginator();
-        $paginator->setPageParam('page');
-        $paginator->setBaseUrl($this->getServices()->get('urler')->generate('frontendScribbleIndex'));
-        $paginator->addParam('find', $criteria->getFind());
-
         $params = array(
             'page' => $request->query->get('page'),
             'sorting' => 'created',
@@ -35,8 +30,12 @@ class ScribbleController extends AbstractController
         );
 
         $repository = $this->getServices()->get('scribble.repository');
-        $scribbles = $repository->getList($criteria, $paginator, $params);
+        $scribbles = $repository->getList($criteria, $params);
+        
         $view = $this->getServices()->get('view');
+        $scribbles->getPaginator()->setPageParam('page');
+        $scribbles->getPaginator()->setBaseUrl($this->getServices()->get('urler')->generate('frontendScribbleIndex'));
+        $scribbles->getPaginator()->addParam('find', $criteria->getFind());
 
         $vars = array(
             'request' => $request,
@@ -54,10 +53,6 @@ class ScribbleController extends AbstractController
         $criteria = new Criteria();
         $criteria->setTags(explode('/', $tags), 100);// limit to 100 tags to search for
 
-        $paginator = new Paginator();
-        $paginator->setPageParam('page');
-        $paginator->setBaseUrl($this->getServices()->get('urler')->generate('frontendScribbleTag', array('tags' => $tags)));
-
         $params = array(
             'page' => $request->query->get('page'),
             'sorting' => 'creation-date',
@@ -65,8 +60,11 @@ class ScribbleController extends AbstractController
         );
 
         $repository = $this->getServices()->get('scribble.repository');
-        $scribbles = $repository->getList($criteria, $paginator, $params);
+        $scribbles = $repository->getList($criteria, $params);
+        
         $view = $this->getServices()->get('view');
+        $scribbles->getPaginator()->setPageParam('page');
+        $scribbles->getPaginator()->setBaseUrl($this->getServices()->get('urler')->generate('frontendScribbleTag', array('tags' => $tags)));
 
         $vars = array(
             'request' => $request,

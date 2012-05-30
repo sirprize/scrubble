@@ -9,7 +9,6 @@
 namespace Sirprize\Scrubble\Controller\Feed;
 
 use Sirprize\Scribble\Filter\Criteria;
-use Sirprize\Paginate\Paginator;
 use Sirprize\Scrubble\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +24,7 @@ class ScribbleController extends AbstractController
         );
 
         $repository = $this->getServices()->get('scribble.repository');
-        $scribbles = $repository->getList(new Criteria(), new Paginator(), $params);
+        $scribbles = $repository->getList(new Criteria(), $params);
         $view = $this->getServices()->get('view');
 
         $vars = array(
