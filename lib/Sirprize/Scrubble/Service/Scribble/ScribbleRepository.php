@@ -12,7 +12,9 @@ use Sirprize\Scribble\ScribbleDirInterface;
 use Sirprize\Scribble\ScribbleCollection;
 use Sirprize\Scribble\Filter\Filter;
 use Sirprize\Scribble\Filter\Criteria;
-use Sirprize\Paginate\CurrentPagePaginator;
+use Sirprize\Paginate\Input\PageInput;
+use Sirprize\Paginate\Range\PageRange;
+use Sirprize\Paginate\Paginator;
 
 /**
  * ScribbleRepository fetches scribbles.
@@ -42,6 +44,8 @@ class ScribbleRepository
     {
         $page = (array_key_exists('page', $params)) ? (int) $params['page'] : 1;
         $itemsPerPage = (array_key_exists('itemsPerPage', $params)) ? (int) $params['itemsPerPage'] : $this->itemsPerPage;
+        $pageInput = new PageInput($page, $itemsPerPage);
+        $pageRange = new PageRange($pageInput);
         
         $sorting = (array_key_exists('sorting', $params)) ? $params['sorting'] : 'created';
         $descending = (array_key_exists('descending', $params)) ? (bool) $params['descending'] : true;
@@ -49,9 +53,6 @@ class ScribbleRepository
         $criteria = ($criteria) ? $criteria : new Criteria();
         $mode = ($criteria->getMode()) ? $criteria->getMode() : $this->mode;
         
-        // paginator
-        $paginator = new CurrentPagePaginator($page, $itemsPerPage);
-
         // criteria
         $criteria->setMode($mode);
 
@@ -75,8 +76,8 @@ class ScribbleRepository
         // filter and paginate
         $filter = new Filter();
         $scribbles = $filter->apply($allScribbles, $criteria)->getScribbles();
-        $paginator->start($scribbles->count());
-        $scribbles = new ScribbleCollection($scribbles->slice($paginator->getOffset(), $itemsPerPage));
+        $paginator = new Paginator($pageRange->setTotalItems($scribbles->count()));
+        $scribbles = new ScribbleCollection($scribbles->slice($pageRange->getOffset(), $pageRange->getNumItems()));
         return new ScribbleListBag($scribbles, $filter, $criteria, $paginator);
     }
 

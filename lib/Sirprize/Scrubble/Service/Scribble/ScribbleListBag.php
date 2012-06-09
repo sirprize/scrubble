@@ -11,7 +11,7 @@ namespace Sirprize\Scrubble\Service\Scribble;
 use Sirprize\Scribble\ScribbleCollection;
 use Sirprize\Scribble\Filter\Filter;
 use Sirprize\Scribble\Filter\Criteria;
-use Sirprize\Paginate\AbstractPaginator;
+use Sirprize\Paginate\Paginator;
 
 /**
  * ScribbleList bags list objects in one place.
@@ -27,7 +27,7 @@ class ScribbleListBag
     protected $relatedTags = null;
     protected $relatedTagCounts = null;
 
-    public function __construct(ScribbleCollection $scribbles, Filter $filter, Criteria $criteria, AbstractPaginator $paginator)
+    public function __construct(ScribbleCollection $scribbles, Filter $filter, Criteria $criteria, Paginator $paginator)
     {
         $this->paginator = $paginator;
         $this->criteria = $criteria;
